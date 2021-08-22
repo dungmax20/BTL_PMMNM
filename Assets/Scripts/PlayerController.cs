@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameStateManager.CurrentState != GameState.Play)
+            return;
         if (isDead == false)
         {
             if (Input.GetMouseButtonDown(0))
@@ -39,5 +41,33 @@ public class PlayerController : MonoBehaviour
     {
         rigid.velocity = Vector2.zero;
         rigid.AddForce(Vector2.up * force);
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        isDead = true;
+        rigid.velocity = Vector2.zero;
+        GameStateManager.CurrentState = GameState.GameOver;
+
+    }
+    private void Awake()
+    {
+        GameStateManager.GameStateChanged += GameStateChanged_PL;
+    }
+    private void GameStateChanged_PL()
+    {
+        if (GameStateManager.CurrentState == GameState.Idle)
+        {
+            rigid.velocity = Vector3.zero;
+            rigid.isKinematic = true;
+            transform.position = Vector3.zero;
+        }
+        else if (GameStateManager.CurrentState == GameState.Play)
+        {
+            rigid.isKinematic = false;
+            transform.position = Vector2.zero;
+            rigid.velocity = Vector2.zero;
+            rigid.angularVelocity = 0;
+            isDead = false;
+        }
     }
 }

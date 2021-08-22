@@ -13,9 +13,9 @@ public class ScoreManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        GameStateManager.GameStateChanged += GameStateChanged;
+        GameStateManager.GameStateChanged += GameStateChanged_SC;
     }
-    private void GameStateChanged()
+    private void GameStateChanged_SC()
     {
         if (GameStateManager.CurrentState == GameState.Play)
         {
